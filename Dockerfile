@@ -6,5 +6,5 @@
 
 FROM openjdk:8-alpine
 VOLUME /tmp
-ADD target/SALESPREPORTING.war SALESPREPORTING.war
-ENTRYPOINT ["java", "-Duser.timezone=UTC", "-Djava.security.egd=file:/dev/./urandom","-jar","/SALESPREPORTING.war"] 
+ADD target/SALESREPORTING.war SALESREPORTING.war
+ENTRYPOINT ["java", "-Duser.timezone=UTC", "-Djava.security.egd=file:/dev/./urandom","-jar","/SALESREPORTING.war"] 

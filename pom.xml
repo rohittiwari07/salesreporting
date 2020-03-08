@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ravi</groupId>
-    <artifactId>SALESPREPORTING</artifactId>
+    <artifactId>SALESREPORTING</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
@@ -13,15 +13,15 @@
         <version>1.5.22.RELEASE</version>
     </parent>
     
-    <name>SALESPREPORTING</name>
+    <name>SALESREPORTING</name>
     
     <organization>
-        <name>SALESPREPORTING</name>
+        <name>SALESREPORTING</name>
     </organization>
     
     <licenses>
         <license>
-            <name>SPREPORTING</name>
+            <name>SALESREPORTING</name>
             <url>http://giturl/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
         </license>
@@ -30,10 +30,9 @@
     <developers>
         <developer>
             <id>rtiwari</id>
-            <name>Ravi Tiwari</name>
             <email>rtiwari@gmail.com</email>
             <roles>
-                <role>project architect</role>
+                <role>project developer</role>
             </roles>
         </developer>
     </developers>
