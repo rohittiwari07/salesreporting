@@ -1,0 +1,485 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions" 
+                xmlns:sec="http://www.springframework.org/security/tags"
+                template="/WEB-INF/template.xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:define name="title">Sales Reporting and Analysis</ui:define>
+    <ui:define name="head">
+        <style type="text/css">
+            .docs h1 {
+                margin-top: 30px;
+            }
+
+            .docs h1:first-child {
+                margin-top: 0;
+            }
+
+            .docs pre {
+                background-color: #edf0f5;
+                padding: 1em;
+                font-family: monospace;;
+            }
+            /** chorme and safari **/
+            ::-webkit-input-placeholder {
+                color: #aaa !important;
+                font-weight: normal !important;
+            }
+
+            /** firefox **/
+            :-moz-placeholder {
+                color: #aaa !important;
+                font-weight: normal !important;
+            }
+
+            /** IE **/
+            .ui-watermark {
+                color: #aaa !important;
+                font-weight: normal !important;
+            }
+
+            .ui-growl-error {
+                background-color: red;
+                color: red;
+            }
+
+            .ui-growl-info {
+                color: green;
+            }
+
+            .ui-datatable th.ui-state-default {
+                background-color: #0293d1;
+                border-color: #C1D5DF;
+                color: #fff;
+            }
+
+            .ui-widget-content .ui-datatable-even .ui-datatable-selectable .ui-state-highlight {
+                color: #222;
+            }
+
+            .ui-datatable-footer  {
+                background-color: #0388d2;
+            }
+
+            .ui-paginator {
+                height: 28px;
+            }
+
+            .overlay{
+                opacity:0.9;
+                background-color: #fff;
+                cursor: wait;
+                position:fixed;
+                width:100%;
+                height:100%;
+                top:0px;
+                left:0px;
+                right: 0px;
+                z-index:1000;
+                font-size: x-large;
+                font-weight: bolder;
+                background-image: url("block-id-icon.png");
+            }
+        </style>
+        <script type="text/javascript">
+            function skinEmailChart() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+//                this.cfg.seriesColors = ['#EA9624', '#5BA5D8', '#B7D666', '#DA5E5B'];
+                this.cfg.seriesColors = ['#007be5', '#EA9624', '#20d077', '#DA5E5B'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#F5F5F5',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    rendererOptions: {
+                        textColor: '#666F77'
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    lineWidth: 1,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                };
+                this.cfg.axes = {
+                    xaxis: {
+                        renderer: jQuery.jqplot.DateAxisRenderer,
+                        tickRenderer: $.jqplot.AxisTickRenderer,
+                        tickOptions: {
+                            angle: -30,
+                            formatString: '%m/%d/%Y'
+                        },
+                        tickInterval: '2 month',
+
+                        min: '10/01/2019',
+
+                        autoscale: true
+
+                    },
+                    yaxis: {
+                        min: 0,
+                        max: 2000
+                    }
+                };
+            }
+            function skinDialChart() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+//                this.cfg.seriesColors = ['#EA9624', '#5BA5D8', '#B7D666', '#DA5E5B'];
+                this.cfg.seriesColors = ['#007be5', '#EA9624', '#20d077', '#DA5E5B'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#F5F5F5',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    rendererOptions: {
+                        textColor: '#666F77'
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    lineWidth: 1,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                };
+                this.cfg.axes = {
+                    xaxis: {
+                        renderer: jQuery.jqplot.DateAxisRenderer,
+                        tickRenderer: $.jqplot.AxisTickRenderer,
+                        tickOptions: {
+                            angle: -30,
+                            formatString: '%m/%d/%Y'
+                        },
+                        tickInterval: '2 month',
+                        min: '10/01/2019',
+                        autoscale: true
+
+                    },
+                    yaxis: {
+                        min: 0,
+                        max: 700
+                    }
+                };
+            }
+        </script>
+    </ui:define>
+    <!-- CONTENT DEFINITION -->
+    <ui:define name="content">
+        <!-- ###################### DASHBOARD ###################### -->
+        <div class="ui-g ui-fluid dashboard">
+            <!-- ###################### 3 HEADER BLOCKS STARTS HERE ###################### -->
+            <!-- ###################### TOTAL CASES ###################### -->
+            <div class="ui-g-12 ui-md-4">
+                <div class="card clearfix summary">
+                    <span class="title"><i class="fa fa-phone" aria-hidden="true"></i> Total Dials</span>
+                    <span class="detail">Most Recent Dial Count</span>
+                    <span class="count revenue">#{dialController.latestval}</span>
+                </div>
+            </div>
+            <!-- ###################### TOTAL OPENED ###################### -->
+            <div class="ui-g-12 ui-md-4">
+                <div class="card clearfix summary">
+                    <span class="title"><i class="fa fa-user-circle-o" aria-hidden="true"></i> Total Weekly Demos</span>
+                    <span class="count visitors">#{dialController.latestaip}</span>
+                </div>
+            </div>
+            <!-- ###################### TOTAL CLOSED ###################### -->
+            <div class="ui-g-12 ui-md-4">
+                <div class="card clearfix summary">
+                    <span class="title"><i class="fa fa-tasks" aria-hidden="true"></i> Demo (%)</span>
+                    <span class="count purchases">#{dialController.latestagg}</span>
+                </div>
+            </div>
+            <!-- ###################### DAIL STATS TABLE ######################### -->
+                <div class="ui-g-12 ui-md-12">
+                    <h:form id="dialform">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                        <div class="card">
+                            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                            <p:dataTable id="dialstats" var="es"
+                                         value="#{dialController.dials}" paginator="true"
+                                         rows="5" paginatorPosition="bottom" draggableColumns="true" draggableRows="true"
+                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                         rowsPerPageTemplate="5,10,15,20,25,30,35,40,45" rowKey="#{es}" sortMode="single" sortOrder="descending" sortBy="#{es.id}"
+                                         selectionMode="single" widgetVar="$dialstats">
+                                <f:facet name="{Exporters}">
+                                    <h:commandLink>
+                                        <p:graphicImage name="images/excel.png" width="24"/>
+                                        <p:dataExporter type="xls" target="dialstats" fileName="Dial_Statistics" />
+                                    </h:commandLink>
+                                    <h:commandLink>
+                                        <p:graphicImage name="images/xlsx.png" width="24"/>
+                                        <p:dataExporter type="xlsxstream" target="dialstats" fileName="Dial_Statistics" />
+                                    </h:commandLink>
+                                    <h:commandLink>
+                                        <p:graphicImage name="images/pdf.png" style="float:right;" width="24" library="omega-layout"/>
+                                        <p:dataExporter type="pdf" target="dialstats" fileName="Dial_Statistics"/>
+                                    </h:commandLink>
+                                    <h:commandLink>
+                                        <p:graphicImage name="images/csv.png" style="float:right;" width="24" library="omega-layout" />
+                                        <p:dataExporter type="csv" target="dialstats" fileName="Dial_Statistics" />
+                                    </h:commandLink>
+                                    <h:commandLink>
+                                        <p:graphicImage name="images/xml.png" style="float:right;" width="24" library="omega-layout" />
+                                        <p:dataExporter type="xml" target="dialstats" fileName="Dial_Statistics" />
+                                    </h:commandLink>
+                                </f:facet>
+                                <f:facet name="header">
+                                    Dial Statistics Summary
+                                </f:facet>
+                                <p:column sortBy="#{es.date}" sortable="true"
+                                          id="date">
+                                    <f:facet name="header">
+                                        <h:outputText value="Date" />
+                                    </f:facet>
+                                    <h:outputText value="#{es.date}">                                    
+                                        <f:convertDateTime pattern="MM/dd/yyyy" />                                
+                                    </h:outputText>
+                                </p:column>
+                                <p:column sortBy="#{es.value}" toggleable="false" id="value">
+                                    <f:facet name="header">
+                                        <h:outputText value="Total Dials" />
+                                    </f:facet>
+                                    <h:outputText value="#{es.value}"/>
+                                </p:column>
+                                <p:column sortBy="#{es.aip}" toggleable="false" id="aip">
+                                    <f:facet name="header">
+                                        <h:outputText value="Total Weekly Demos" />
+                                    </f:facet>
+                                    <h:outputText value="#{es.aip}"/>
+                                </p:column>
+                                <sec:authorize access="hasAuthority('ADMIN')">
+                                <p:column headerText="Action" style="text-align: center" exportable="false" width="10%">
+                                    <p:commandButton actionListener="#{dialController.removeDial(es.id)}" icon="ui-icon-minus" id="delItemBtn" style="width: 30px;" 
+                                                     update="dialstats">
+                                        <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-alert" />
+                                    </p:commandButton>
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                    </p:confirmDialog>
+                                    <p:commandButton icon="ui-icon-pencil" id="editItemBtn" style="width: 30px;"
+                                                     update=":dialcont"
+                                                     actionListener="#{dialController.changeDial(es)}"
+                                                     oncomplete="PF('$dialcont').show()"/>
+                                </p:column>
+                                </sec:authorize>
+                            </p:dataTable>
+                            <sec:authorize access="hasAuthority('ADMIN')">
+                            <p:commandButton icon="ui-icon-plus" id="addItemBtn" value="Add New Dial Statistics"  class="ui-button-text ui-c"
+                                             style="width: 300px;" 
+                                             actionListener="#{dialController.addNewDial}" 
+                                             update=":dialcont" ajax="true" oncomplete="PF('$dialcont').show()"/>
+                            </sec:authorize>
+                        </div>
+                    </h:form>
+                </div>
+                <!-- ###################### DAIL STATS TABLE ######################### -->
+                <!-- ###################### EMAIL STATS INPUT/EDIT FORM ######################### -->
+                <p:dialog id="dialcont" responsive="true"  showHeader="true" maximizable="true" 
+                          widgetVar="$dialcont" modal="true" resizable="true">
+                    <p:panel header="Dial Statistics Editor" style="text-align:center;background:#fff;height:140%">
+                        <h:form id="dialcontform">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                            <h:panelGrid columns="3" cellpadding="5">
+                                <h:outputLabel for="idate" value="Date:" />
+                                <p:calendar 
+                                    value="#{dialController.dial.date}"
+                                    id="idate" required="true" validatorMessage="Date cannot be empty"
+                                    requiredMessage="Date cannot be empty" label="Date">
+                                </p:calendar>
+                                <p:watermark for="idate" value="Enter Date" />
+                                <h:outputLabel for="iclick" value="Total:" />
+                                <p:inputText 
+                                    value="#{dialController.dial.value}"
+                                    id="iclick" required="true" validatorMessage="Total Dials counts cannot be empty"
+                                    requiredMessage="Total Dials counts cannot be empty" label="Total (Dials)">
+                                </p:inputText>
+                                <p:watermark for="iclick" value="Enter Total (Dials):" />
+                                <h:outputLabel for="iaip" value="Account in Progressed:" />
+                                <p:inputText 
+                                    value="#{dialController.dial.aip}"
+                                    id="iaip" required="true" validatorMessage="Account in Progress Dials counts cannot be empty"
+                                    requiredMessage="Account in Progress Dials counts cannot be empty" label="Account in Progressed (Dials)">
+                                </p:inputText>
+                                <p:watermark for="iaip" value="Enter Account in Progress (Dials):" />
+                                <p:commandButton value="Submit" ajax="true"
+                                                 update=":dialform:dialstats" style="float: right;"
+                                                 action="#{dialController.saveedit}" 
+                                                 oncomplete="PF('$dialcont).hide()"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:panel>
+                </p:dialog>
+            <!-- ###################### 3 HEADER BLOCKS ENDS HERE ###################### -->
+            <!-- ###################### 2 CHART BLOCKS STARTS HERE ###################### -->
+            <!-- ###################### EMAIL CHART ###################### -->
+            <div class="ui-g-12 ui-lg-6">
+                <div class="card">
+                    <h1 class="centerText"><i class="fa fa fa-envelope-o" aria-hidden="true"></i> Email Statistics</h1>
+                    <p:chart id="emailstats" type="line" model="#{emailController.emailChart}" responsive="true"/>
+                </div>
+            </div>
+            <!-- ###################### EMAIL CHART ###################### -->
+            <!-- ###################### DIAL CHART ###################### -->
+            <div class="ui-g-12 ui-lg-6">
+                <div class="card">
+                    <h1 class="centerText"><i class="fa fa-phone" aria-hidden="true"></i> Dial Statistics</h1>
+                    <p:chart id="dialstats" type="line" model="#{dialController.dialChart}" responsive="true"/>
+                </div>
+            </div>
+            <!-- ###################### DIAL CHART ###################### -->
+            <!-- ###################### 3 HEADER BLOCKS STARTS HERE ###################### -->
+            <!-- ###################### EMAIL STATS TABLE ######################### -->
+            <div class="ui-g-12 ui-md-12">
+                <h:form id="emailform">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                    <div class="card">
+                        <p:dataTable id="emailstats" var="es"
+                                     value="#{emailController.emails}" paginator="true"
+                                     rows="5" paginatorPosition="bottom" draggableColumns="true" draggableRows="true"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+                                     rowsPerPageTemplate="5,10,15,20,25,30,35,40,45" rowKey="#{es}" sortMode="single" sortOrder="descending" sortBy="#{es.id}" 
+                                     selectionMode="single" widgetVar="$emailstats">
+                            <f:facet name="{Exporters}">
+                                <h:commandLink>
+                                        <p:graphicImage name="images/excel.png" width="24"/>
+                                        <p:dataExporter type="xls" target="emailstats" fileName="Email_Statistics" />
+                                    </h:commandLink>
+                                    <h:commandLink>
+                                        <p:graphicImage name="images/xlsx.png" width="24"/>
+                                        <p:dataExporter type="xlsxstream" target="emailstats" fileName="Email_Statistics" />
+                                    </h:commandLink>
+                                    <h:commandLink>
+                                        <p:graphicImage name="images/pdf.png" style="float:right;" width="24" library="omega-layout"/>
+                                        <p:dataExporter type="pdf" target="emailstats" fileName="Email_Statistics"/>
+                                    </h:commandLink>
+                                    <h:commandLink>
+                                        <p:graphicImage name="images/csv.png" style="float:right;" width="24" library="omega-layout" />
+                                        <p:dataExporter type="csv" target="emailstats" fileName="Email_Statistics" />
+                                    </h:commandLink>
+                                    <h:commandLink>
+                                        <p:graphicImage name="images/xml.png" style="float:right;" width="24" library="omega-layout" />
+                                        <p:dataExporter type="xml" target="emailstats" fileName="Email_Statistics" />
+                                    </h:commandLink>
+                            </f:facet>
+                            <f:facet name="header">
+                                Email Statistics Summary
+                            </f:facet>
+                            <p:column sortBy="#{es.date}"
+                                      id="date">
+                                <f:facet name="header">
+                                    <h:outputText value="Date" />
+                                </f:facet>
+                                <h:outputText value="#{es.date}">                                    
+                                    <f:convertDateTime pattern="MM/dd/yyyy" />                                
+                                </h:outputText>
+                            </p:column>
+                            <p:column sortBy="#{es.click}" toggleable="false" id="click">
+                                <f:facet name="header">
+                                    <h:outputText value="Clicked (Email)" />
+                                </f:facet>
+                                <h:outputText value="#{es.click}"/>
+                            </p:column>
+                            <p:column sortBy="#{es.open}" toggleable="false" id="open">
+                                <f:facet name="header">
+                                    <h:outputText value="Opened (Email)" />
+                                </f:facet>
+                                <h:outputText value="#{es.open}"/>
+                            </p:column>
+                            <p:column sortBy="#{es.sent}" toggleable="false" id="sent">
+                                <f:facet name="header">
+                                    <h:outputText value="Sent (Email)" />
+                                </f:facet>
+                                <h:outputText value="#{es.sent}"/>
+                            </p:column>
+                            <sec:authorize access="hasAuthority('ADMIN')">
+                                <p:column headerText="Action" style="text-align: center" exportable="false" width="10%">
+                                    <p:commandButton actionListener="#{emailController.removeEmail(es.id)}" icon="ui-icon-minus" id="delItemBtn" style="width: 30px;" 
+                                                     update="emailstats">
+                                        <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-alert" />
+                                    </p:commandButton>
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                    </p:confirmDialog>
+                                    <p:commandButton icon="ui-icon-pencil" id="editItemBtn" style="width: 30px;"
+                                                     update=":emailcont"
+                                                     actionListener="#{emailController.changeEmail(es)}"
+                                                     oncomplete="PF('$emailcont').show()"/>
+                                </p:column>
+                            </sec:authorize>
+                        </p:dataTable>
+                        <sec:authorize access="hasAuthority('ADMIN')">
+                            <p:commandButton icon="ui-icon-plus" id="addItemBtn" value="Add New Email Statistics"  class="ui-button-text ui-c"
+                                             style="width: 300px;" 
+                                             actionListener="#{emailController.addNewEmail}" 
+                                             update=":emailcont" ajax="true" oncomplete="PF('$emailcont').show()"/>
+                        </sec:authorize>
+                    </div>
+                </h:form>
+            </div>
+            <!-- ###################### EMAIL STATS TABLE ######################### -->
+        </div>
+        <!-- ###################### EMAIL STATS INPUT/EDIT FORM ######################### -->
+        <p:dialog id="emailcont" responsive="true"  showHeader="true" maximizable="true" 
+                  widgetVar="$emailcont" modal="true" resizable="true">
+            <p:panel header="Email Statistics Editor" style="text-align:center;background:#fff;height:140%">
+                <h:form id="emailcontform">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                    <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                    <h:panelGrid columns="3" cellpadding="5">
+                        <h:outputLabel for="idate" value="Date:" />
+                        <p:calendar 
+                            value="#{emailController.email.date}"
+                            id="idate" required="true" validatorMessage="Date cannot be empty"
+                            requiredMessage="Date cannot be empty" label="Date">
+                        </p:calendar>
+                        <p:watermark for="idate" value="Enter Date" />
+                        <h:outputLabel for="iclick" value="Clicked:" />
+                        <p:inputText 
+                            value="#{emailController.email.click}"
+                            id="iclick" required="true" validatorMessage="Clicked Emails counts cannot be empty"
+                            requiredMessage="Clicked Emails counts cannot be empty" label="Clicked (Emails)">
+                        </p:inputText>
+                        <p:watermark for="iclick" value="Enter Clicked (Emails):" />
+                        <h:outputLabel for="iopen" value="Open:" />
+                        <p:inputText 
+                            value="#{emailController.email.open}"
+                            id="iopen" required="true" validatorMessage="Opened Email counts cannot be empty"
+                            requiredMessage="Opened Email counts cannot be empty" label="Open (Emails)">
+                        </p:inputText>
+                        <p:watermark for="iopen" value="Enter Open (Emails):" />
+                        <h:outputLabel for="isent" value="Sent:" />
+                        <p:inputText 
+                            value="#{emailController.email.sent}"
+                            id="isent" required="true" validatorMessage="Sent Emails counts cannot be empty"
+                            requiredMessage="Sent Emails counts cannot be empty" label="Sent (Emails)">
+                        </p:inputText>
+                        <p:watermark for="isent" value="Enter Sent (Emails):" />
+                        <p:commandButton value="Submit" ajax="true"
+                                         update=":emailform:emailstats" style="float: right;"
+                                         action="#{emailController.saveedit}" 
+                                         oncomplete="PF('$emailcont).hide()"/>
+                    </h:panelGrid>
+                </h:form>
+            </p:panel>
+        </p:dialog>
+    </ui:define>
+</ui:composition>
