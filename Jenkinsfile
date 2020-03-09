@@ -1,7 +1,8 @@
 pipeline {
     agent any
     tools {
-        maven 'Maven'
+        maven 'Maven',
+        docker 'Docker'
     }
     stages {
         stage ('Initialize') {
@@ -22,7 +23,7 @@ pipeline {
                 sh 'mvn package'
             }
         }
-        stage('Docker') {
+        stage('Dockerbuild') {
             steps {
                 sh 'docker build -t sales_reporting .'
             }
