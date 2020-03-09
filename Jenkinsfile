@@ -29,9 +29,7 @@ pipeline {
         }
         stage('Dockerbuilddb') {
             steps {
-                bash '''#!/bin/bash
-                 cd /Users/pocuser/NetBeansProjects/project/db && docker build -t db .
-                '''
+                sh 'cd /Users/pocuser/NetBeansProjects/project/db && docker build -t db .'
             }
         }
         stage('Deploy') {
