@@ -17,5 +17,10 @@ pipeline {
                 sh 'mvn clean'
             }
         }
+        stage ('Package') {
+            steps {
+                sh 'mvn package'
+            }
+        }
     }
 }
