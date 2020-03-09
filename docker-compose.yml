@@ -1,0 +1,53 @@
+# compose file format version
+version: '3.7'
+
+# Define services
+services:
+   # Sales Reporting Service
+   sales_reporting:
+      image: sales_reporting:latest
+      container_name: sales_reporting
+      depends_on: 
+         - db # This service depends on mysqlDB. Start that first.
+      ports:
+         - 8080:8080
+         - 9000:9000
+      networks:
+         - sales_network
+    
+   # Database Service (MariaDB)
+   db:
+      image: db:latest
+      ports:
+        - 3306:3306
+      volumes:
+        - /var/tmp/demomysql
+      restart: always
+      networks:
+         - sales_network
+   # Monitoring Services
+   prometheus:
+      image: prom/prometheus
+      container_name: prometheus
+      volumes:
+         - /Users/pocuser/NetBeansProjects/project/compose/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      ports:
+         - 9090:9090
+      networks:
+         - sales_network
+         
+   grafana:
+      image: grafana/grafana
+      container_name: grafana
+      ports:
+         - 3000:3000
+      volumes:
+        - /Users/pocuser/grafana
+      links:
+         - prometheus
+      networks:
+         - sales_network
+    
+networks:
+  sales_network:
+    driver: bridge
