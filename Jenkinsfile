@@ -22,8 +22,10 @@ pipeline {
                 sh 'mvn package'
             }
         }
-        stage('DockerBuild') {
-            sh 'docker build -t sales_reporting .'
+        stage('Dockerbuild') {
+            steps {
+                sh 'docker build -t sales_reporting .'
+            }
         }
     }
 }
