@@ -32,5 +32,10 @@ pipeline {
                 sh 'docker build -t db .'
             }
         }
+        stage('Deploy') {
+            steps {
+                sh 'docker-compose down && docker-compose build --no-cache && docker-compose up'
+            }
+        }
     }
 }
