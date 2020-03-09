@@ -42,7 +42,7 @@ services:
       ports:
          - 3000:3000
       volumes:
-        - /Users/pocuser/grafana:/srv/docker/grafana/data
+        - /Users/pocuser/grafana:/var/lib/grafana
       links:
          - prometheus
       networks:
