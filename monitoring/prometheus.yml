@@ -23,4 +23,4 @@ scrape_configs:
     metrics_path: '/prometheus'
     scrape_interval: 5s
     static_configs:
-    - targets: ['prometheus:8080']
+    - targets: ['sales_reporting:8080']

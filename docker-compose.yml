@@ -36,6 +36,8 @@ services:
          - /home/ubuntu/salesreporting/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
       ports:
          - 9090:9090
+      links:
+         - sales_reporting
       networks:
          - sales_network
          
