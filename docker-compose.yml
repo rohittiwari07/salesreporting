@@ -30,7 +30,7 @@ services:
       image: prom/prometheus
       container_name: prometheus
       volumes:
-         - /Users/pocuser/NetBeansProjects/project/compose/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+         - /home/ubuntu/salesreporting/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
       ports:
          - 9090:9090
       networks:
@@ -42,7 +42,7 @@ services:
       ports:
          - 3000:3000
       volumes:
-        - /Users/pocuser/grafana:/var/lib/grafana
+        - /home/ubuntu/salesreporting/grafana:/var/lib/grafana
       links:
          - prometheus
       networks:

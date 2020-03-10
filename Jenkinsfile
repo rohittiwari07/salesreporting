@@ -29,7 +29,7 @@ pipeline {
         }
         stage('Dockerbuilddb') {
             steps {
-                sh 'cd /Users/pocuser/NetBeansProjects/project/db && docker build -t db .'
+                sh 'cd /home/ubuntu/salesreporting/db && docker build -t db .'
             }
         }
         stage('Deploy') {
