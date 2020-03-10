@@ -9,6 +9,8 @@ services:
       container_name: sales_reporting
       depends_on: 
          - db # This service depends on mysqlDB. Start that first.
+      links:
+         - db
       ports:
          - 8080:8080
          - 9000:9000
