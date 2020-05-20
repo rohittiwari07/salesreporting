@@ -1,5 +1,5 @@
 # compose file format version
-version: '3.7'
+version: '3.3'
 
 # Define services
 services:
