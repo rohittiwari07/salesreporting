@@ -43,7 +43,7 @@ services:
    grafana:
       image: grafana/grafana
       container_name: grafana
-      user: "1001"
+      user: "472"
       ports:
          - 3000:3000
       volumes:
@@ -52,7 +52,7 @@ services:
          - prometheus
       networks:
          - sales_network
-    
+
 networks:
   sales_network:
     driver: bridge
